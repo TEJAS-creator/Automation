@@ -10,6 +10,22 @@ OPENAI_API_KEY = "Your_API_Key"
 openai.api_key = OPENAI_API_KEY
 NEWS_API_KEY = "defb8ed0610f4a36ad2c189219fc2773"
 
+def get_wikipedia_summary(topic: str) -> str:
+    topic = topic.strip()
+    if not topic:
+        return "Please provide a topic for Wikipedia."
+    
+    try:
+        return wikipedia.summary(topic, sentences=3)
+    except wikipedia.exceptions.DisambiguationError as e:
+        options = ', '.join(e.options[:5])  # show first 5 options
+        return f"There are multiple results for '{topic}'. Did you mean: {options}?"
+    except wikipedia.exceptions.PageError:
+        return f"No Wikipedia page found for '{topic}'."
+    except Exception as e:
+        return f"An unexpected error occurred: {e}"
+
+
 def query_gpt3(query):
     try:
         response = openai.ChatCompletion.create(
