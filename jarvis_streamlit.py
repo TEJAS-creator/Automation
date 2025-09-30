@@ -1,5 +1,4 @@
 import datetime
-import webbrowser
 import wikipedia
 import requests
 from bs4 import BeautifulSoup
@@ -9,6 +8,7 @@ import openai
 OPENAI_API_KEY = "Your_API_Key"
 openai.api_key = OPENAI_API_KEY
 NEWS_API_KEY = "defb8ed0610f4a36ad2c189219fc2773"
+
 
 def get_wikipedia_summary(topic: str) -> str:
     topic = topic.strip()
@@ -26,7 +26,20 @@ def get_wikipedia_summary(topic: str) -> str:
         return f"An unexpected error occurred: {e}"
 
 
-def query_gpt3(query):
+def get_google_info(query: str) -> str:
+    try:
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(f"https://www.google.com/search?q={query}", headers=headers)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        results = soup.find_all('div', class_='BNeawe')
+        if results:
+            return "\n".join([res.text for res in results[:5]])
+        return "No results found."
+    except Exception as e:
+        return f"Error: {e}"
+
+
+def query_gpt3(query: str) -> str:
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -41,7 +54,8 @@ def query_gpt3(query):
     except Exception as e:
         return f"Error: {e}"
 
-def get_news(query=None):
+
+def get_news(query=None) -> list:
     url = f"https://newsapi.org/v2/top-headlines?country=in&apiKey={NEWS_API_KEY}"
     if query:
         url += f"&q={query}"
@@ -50,6 +64,7 @@ def get_news(query=None):
         return [a['title'] for a in data.get('articles', [])[:5]] or ["No news found."]
     except Exception as e:
         return [f"Error: {e}"]
+
 
 def process_command(command: str) -> str:
     command = command.lower()
@@ -64,22 +79,15 @@ def process_command(command: str) -> str:
         topic = command.replace("wikipedia", "").strip()
         return get_wikipedia_summary(topic)
 
-
-   elif "google" in command:
-       search_query = command.replace("google", "").strip()
-       if search_query:
-        return get_google_info(search_query)
-       else:
-        return "Please provide a search term after 'google'. Example: google Python programming"
-
+    elif "google" in command:
+        search_query = command.replace("google", "").strip()
+        if search_query:
+            return get_google_info(search_query)
+        else:
+            return "Please provide a search term after 'google'. Example: google Python programming"
 
     elif "news" in command:
         return "\n".join(get_news())
-
-    elif "youtube" in command and "play" in command:
-        song = command.replace("play", "").replace("on youtube", "").strip()
-        pywhatkit.playonyt(song)
-        return f"Playing {song} on YouTube."
 
     elif "gpt" in command or "ai" in command:
         return query_gpt3(command)
