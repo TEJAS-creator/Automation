@@ -65,15 +65,13 @@ def process_command(command: str) -> str:
         return get_wikipedia_summary(topic)
 
 
-    elif "google" in command:
-        topic = command.replace("google", "").strip()
-        if topic:
-            headers = {"User-Agent": "Mozilla/5.0"}
-            r = requests.get(f"https://www.google.com/search?q={topic}", headers=headers)
-            soup = BeautifulSoup(r.text, 'html.parser')
-            results = soup.find_all('div', class_='BNeawe')
-            return results[0].text if results else "No info found."
-        return "What do you want to search?"
+   elif "google" in command:
+       search_query = command.replace("google", "").strip()
+       if search_query:
+        return get_google_info(search_query)
+       else:
+        return "Please provide a search term after 'google'. Example: google Python programming"
+
 
     elif "news" in command:
         return "\n".join(get_news())
