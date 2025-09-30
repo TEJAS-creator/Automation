@@ -3,7 +3,6 @@ import webbrowser
 import wikipedia
 import requests
 from bs4 import BeautifulSoup
-import pywhatkit
 import openai
 
 # Your API keys
