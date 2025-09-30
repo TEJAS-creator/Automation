@@ -1,5 +1,5 @@
 import streamlit as st
-from jarvis import process_command  # import your function
+from jarvis_streamlit import process_command  # import your function
 
 st.set_page_config(page_title="Jarvis AI Assistant", page_icon="🤖")
 
