@@ -62,7 +62,8 @@ def process_command(command: str) -> str:
 
     elif "wikipedia" in command:
         topic = command.replace("wikipedia", "").strip()
-        return wikipedia.summary(topic, sentences=2) if topic else "Give me a topic."
+        return get_wikipedia_summary(topic)
+
 
     elif "google" in command:
         topic = command.replace("google", "").strip()
