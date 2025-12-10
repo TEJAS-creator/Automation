@@ -3,15 +3,13 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# ---------------------------
-# CONFIGURE GEMINI API KEY
-# ---------------------------
+
 API_KEY = "api key"
 genai.configure(api_key=API_KEY)
 
-# ---------------------------
-# PROMPT CONTENT
-# ---------------------------
+
+# PROMPT 
+
 prompt = """
 Give me top 10 latest news in each of the following genres:
 1. Technology
@@ -41,9 +39,7 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 response = model.generate_content(prompt)
 news_text = response.text
 
-# ---------------------------
-# EMAIL CONFIG
-# ---------------------------
+# EMAIL 
 sender_email = "sender@gmail.com"
 app_password = "16 digit password "
 receiver_email = "receiver@gmail.com"
@@ -58,9 +54,8 @@ msg['Subject'] = subject
 
 msg.attach(MIMEText(news_text, 'plain'))
 
-# ---------------------------
-# SEND EMAIL USING GMAIL SMTP
-# ---------------------------
+# GMAIL SMTP
+
 try:
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
