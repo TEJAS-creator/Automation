@@ -18,12 +18,6 @@ A Python-based intelligent chatbot that can perform real-time Google searches, a
 - Google Custom Search API  
 - Requests library  
 
-## 📂 Project Structure
-smart-chatbot/
-├── chatbot.py
-├── README.md
-
-
 ## 📦 Installation
 Clone the repository:
 ```bash
